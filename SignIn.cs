@@ -25,7 +25,7 @@ namespace automationpractice
         }
 
         [TestMethod]
-        public void RegisterTest()
+        public void SignInTest()
         {
 
             driver.Url = "http://automationpractice.com/index.php";
