@@ -1,4 +1,5 @@
 ﻿using System;
+using automationpractice.PageObjects;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
@@ -10,29 +11,28 @@ namespace automationpractice
     public class ContactUs
     {
         IWebDriver driver;
+        WebDriverWait wait;
+
+
         [TestInitialize]
         public void TestInitialize()
         {
             driver = new ChromeDriver();
+            wait = new WebDriverWait(driver, new TimeSpan(0, 0, 5));
         }
 
         [TestMethod]
         public void ContactUsTest()
         {
 
-            driver.Url = "http://automationpractice.com/index.php";
-            driver.FindElement(By.Id("contact-link")).Click();
-            new SelectElement(driver.FindElement(By.Id("id_contact"))).SelectByValue("2");
-            driver.FindElement(By.Id("email")).SendKeys("hola@mailinator.com");
-            driver.FindElement(By.Id("id_order")).SendKeys("1012252");
+            HomePage homePage = new HomePage(driver, wait);
+            ContactUsPage contactUsPage = new ContactUsPage(driver);
 
-            driver.FindElement(By.Id("message")).SendKeys("this is a test for automation");
+            homePage.GoToScreen();
+            homePage.ClickContactUs();
 
-            driver.FindElement(By.Id("submitMessage")).Click();
-            string sucess = driver.FindElement(By.XPath("//*[@id=\"center_column\"]/p")).Text;
-
-            Assert.AreEqual("Your message has been successfully sent to our team.", sucess);
-
+            contactUsPage.Fillform("hola@mailinator.com", "1012252", "this is a test for automation");
+            Assert.AreEqual("Your message has been successfully sent to our team.", contactUsPage.GetSuccessMsg());
         }
 
         [TestCleanup]

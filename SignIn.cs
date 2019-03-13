@@ -5,6 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Chrome;
+using automationpractice.PageObjects;
 
 namespace automationpractice
 {
@@ -28,18 +29,16 @@ namespace automationpractice
         public void SignInTest()
         {
 
-            driver.Url = "http://automationpractice.com/index.php";
-            driver.FindElement(By.ClassName("header_user_info")).Click();
+            HomePage homePage = new HomePage(driver, wait);
+            SignInPage signInPage = new SignInPage(driver);
+            MyAccountPage myAccountPage = new MyAccountPage(driver);
 
-            driver.FindElement(By.Id("email")).SendKeys("anEmail3@fake.com");
-             driver.FindElement(By.Id("passwd")).SendKeys("Password");
-
-            driver.FindElement(By.Id("SubmitLogin")).Click();
-
-            String msg = driver.FindElement(By.ClassName("info-account")).Text;
-
-            Assert.AreEqual("Welcome to your account. Here you can manage all of your personal information and orders.", msg);
             
+            homePage.GoToScreen();
+            homePage.ClickSignIn();
+            
+            signInPage.FillSignIn("anEmail3@fake.com", "Password");
+            Assert.AreEqual("Welcome to your account. Here you can manage all of your personal information and orders.", myAccountPage.GetLogInMsg());
         }
 
         [TestCleanup]
